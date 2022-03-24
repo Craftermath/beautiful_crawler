@@ -5,7 +5,7 @@ Heavily based on [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/lat
 
 ## Usage   
 
-I use [pip](https://pip.pypa.io/en/stable/) to create a virtual enviroment and install requirements.txt   
+I used [pip](https://pip.pypa.io/en/stable/) to create a virtual enviroment and install requirements.txt   
 
 ```bash
 python3 -m venv DEV  
@@ -20,7 +20,7 @@ And after that, run the imprime.py script
 python imprime.py
 ```
 
-## My git favorite rotine at github:   
+## My favorite git rotine at github:   
 
 ```bash
 git pull origin main # first things first  
