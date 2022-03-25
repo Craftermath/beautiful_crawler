@@ -1,8 +1,9 @@
 # imprime.py
 # Teste backend
 
-import requests, bs4, re
+import requests, bs4, re, json
 from urllib.parse import urlparse
+import pandas as pd
 
 
 ## 1 página-alvo, imprime na tela:
@@ -54,23 +55,46 @@ for row in table:
                     ]
             row_info[cell_info[0]] = cell_info[1]
     table_info.append(row_info)
-    print(row_info)
 
-# "formato arbitrário" é um dicionário por linha da tabela por enquanto
+df = pd.DataFrame.from_dict(table_info)
+
+print(df)
+
+## 1 página-alvo, imprime na tela, salva em json
+# A segunda etapa exige que o seu crawler funcione para a mesma página-alvo
+# da etapa anterior, tendo as mesmas funcionalidades da etapa anterior,
+# mas também sendo capaz de salvar os dados em um arquivo em formato json.
+
+
+out_file = open("prices.json", "w")
+
+json.dump(table_info, out_file, indent = 4)
+
+out_file.close()
+
 
 # TODO:
 
-## 1 página-alvo, imprime na tela, salva em json
-# A segunda etapa exige que o seu crawler funcione para a mesma página-alvo da etapa
-# anterior, tendo as mesmas funcionalidades da etapa anterior, mas também sendo capaz de
-# salvar os dados em um arquivo em formato json.
-
 ## 1 página-alvo, imprime na tela, salva em json, salva em csv
-# A terceira etapa exige que o seu crawler funcione para a mesma página-alvo da etapa
-# anterior, tendo as mesmas funcionalidades da etapa anterior, mas também sendo capaz de
-# salvar os dados em um arquivo em formato csv.
+# A terceira etapa exige que o seu crawler funcione para a mesma página-alvo
+# da etapa anterior, tendo as mesmas funcionalidades da etapa anterior,
+# mas também sendo capaz de salvar os dados em um arquivo em formato csv.
+
+# df.to_csv("prices.csv")
 
 ## 2 páginas-alvo
-# A quarta etapa exige que você extraia as informações também da página-alvo 2, tendo as
-# mesmas funcionalidades da etapa anterior.
+# A quarta etapa exige que você extraia as informações também da
+# página-alvo 2, tendo as mesmas funcionalidades da etapa anterior.
+
+# script -> funções
+
+# opções: --print, --save_csv, --save_json 
+
+# melhorar o try except pra parar no link que funcione e tem a tabela 
+
+# testes
+
+# docstrings nas funções
+
+# type hints
 
