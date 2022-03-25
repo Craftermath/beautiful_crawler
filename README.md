@@ -41,4 +41,5 @@ git branch -D [working-feature] # or in github button at PR page
 
 [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/)  
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)   
-[pip](https://pip.pypa.io/en/stable/)
+[pip](https://pip.pypa.io/en/stable/)   
+[TBD](https://trunkbaseddevelopment.com/) & [CI](https://trunkbaseddevelopment.com/continuous-integration/)
