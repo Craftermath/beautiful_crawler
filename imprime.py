@@ -20,29 +20,35 @@ else:
         sys.exit(0)
 
 
+# simplest link crawler
+url1 = "https://www.vultr.com/products/cloud-compute/#pricing"
+subject1 = "cloud-compute"
+
+def crawler(url, subject):
+    parsed_url = urlparse(url)
+    resp = requests.get(url)
+    for i in re.findall(
+            "<a[^>]+href=\"(.*?)\"[^>]*>(.*)?</a>", resp.text, re.I
+            ):
+        link = i[0]
+        if subject in link:
+            slink = "https://" + str(parsed_url.netloc + link)
+            try:
+                res = requests.get(slink)
+                break
+            except:
+                continue
+    return res
+
+
+res = crawler(url1, subject1)
+
 ## 1 página-alvo, imprime na tela:
 # A primeira etapa exige que o seu crawler funcione para a página alvo 1,
 # capturando as informações e sendo capaz de imprimi-las na linha de comando
 # em formato arbitrário.
 
-# simplest link crawler
-spec_url = "https://www.vultr.com/products/cloud-compute/#pricing"
-parsed_url = urlparse(spec_url)
-resp = requests.get(spec_url)
-for i in re.findall("<a[^>]+href=\"(.*?)\"[^>]*>(.*)?</a>", resp.text, re.I):
-    link = i[0]
-    if "cloud-compute" in link:
-        slink = "https://" + str(parsed_url.netloc + link)
-        try:
-            res = requests.get(slink)
-            break
-        except:
-            continue
-
-# info scraping
-soup = bs4.BeautifulSoup(res.text, 'html5lib')
-cloud = soup.select('#cloud-compute')[0]
-table = cloud.find_all("div", attrs={"class": "pt__row"})
+apenas = "#cloud-compute"
 
 tipos = {
         '1': 'VCPU',
@@ -52,25 +58,32 @@ tipos = {
         '5': 'PRICE'
         }
 
-table_info = []
-for row in table:
-    cells = row.find_all("div", attrs={"class": "pt__cell"})
-    tipo = 0
-    row_info = dict()
-    for cell in cells:
-        cell_info = str(str(cell).split('<strong>')[1]).split('</strong>')
-        valor = cell_info[0]
-        unidade = cell_info[1].split('<')[0]
-        tipo +=1
-        if tipo != 6:
-            cell_info = [
-                    tipos.get(str(tipo)),
-                    valor + str(unidade).removeprefix("\xa0")
-                    ]
-            row_info[cell_info[0]] = cell_info[1]
-    table_info.append(row_info)
+def catcher(response_text, info, specs):
+    soup = bs4.BeautifulSoup(response_text, 'html5lib')
+    cloud = soup.select(info)[0]
+    table = cloud.find_all("div", attrs={"class": "pt__row"})
+    table_info = []
+    for row in table:
+        cells = row.find_all("div", attrs={"class": "pt__cell"})
+        tipo = 0
+        row_info = dict()
+        for cell in cells:
+            cell_info = str(str(cell).split('<strong>')[1]).split('</strong>')
+            valor = cell_info[0]
+            unidade = cell_info[1].split('<')[0]
+            tipo +=1
+            if tipo != 6:
+                cell_info = [
+                        specs.get(str(tipo)),
+                        valor + str(unidade).removeprefix("\xa0")
+                        ]
+                row_info[cell_info[0]] = cell_info[1]
+        table_info.append(row_info)
 
-df = pd.DataFrame.from_dict(table_info)
+    return pd.DataFrame.from_dict(table_info), table_info
+
+
+df, dict_t = catcher(res.text, apenas, tipos)
 
 print(df)
 
@@ -83,11 +96,8 @@ if option == "--print":
 # mas também sendo capaz de salvar os dados em um arquivo em formato json.
 
 
-out_file = open("prices.json", "w")
-
-json.dump(table_info, out_file, indent = 4)
-
-out_file.close()
+with open('prices.json', 'w') as out_file:
+    json.dump(dict_t, out_file, indent = 4)
 
 if option == "--save_json":
     sys.exit(0)
@@ -99,9 +109,17 @@ if option == "--save_json":
 
 df.to_csv("prices.csv", sep=';')
 
-# if option == "--save_csv":
-#    sys.exit(0)
 
+## SPECIFICATIONS: ##
+
+# Páginas-alvo:
+
+# 1. https://www.vultr.com/products/cloud-compute/#pricing
+# (apenas SSD Cloud Instances)
+
+# 2. https://www.digitalocean.com/pricing/ (apenas tabela Basic droplets)
+
+#####################
 
 # TODO:
 
@@ -109,13 +127,7 @@ df.to_csv("prices.csv", sep=';')
 # A quarta etapa exige que você extraia as informações também da
 # página-alvo 2, tendo as mesmas funcionalidades da etapa anterior.
 
-# script -> funções
-
-# melhorar o try except pra parar no link que funcione e tem a tabela 
-
 # testes
 
-# docstrings nas funções
-
-# type hints
+# type hint e/ou docstrings nas funções
 
