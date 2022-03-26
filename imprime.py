@@ -1,9 +1,23 @@
 # imprime.py
 # Teste backend
 
-import requests, bs4, re, json
+import requests, bs4, re, json, sys
 from urllib.parse import urlparse
 import pandas as pd
+
+
+# opções: --print, --save_csv, --save_json
+try:
+    option = sys.argv[1]
+except IndexError:
+    print("Please, run again with an option: ",
+          "--print, --save_json or --save_csv")
+    sys.exit(0)
+else:
+    if option not in ["--print", "--save_json", "--save_csv"]:
+        print(f"This {option} is not valid, try again with an option: ",
+              "--print, --save_json or --save_csv")
+        sys.exit(0)
 
 
 ## 1 página-alvo, imprime na tela:
@@ -60,6 +74,9 @@ df = pd.DataFrame.from_dict(table_info)
 
 print(df)
 
+if option == "--print":
+    sys.exit(0)
+
 ## 1 página-alvo, imprime na tela, salva em json:
 # A segunda etapa exige que o seu crawler funcione para a mesma página-alvo
 # da etapa anterior, tendo as mesmas funcionalidades da etapa anterior,
@@ -72,6 +89,8 @@ json.dump(table_info, out_file, indent = 4)
 
 out_file.close()
 
+if option == "--save_json":
+    sys.exit(0)
 
 ## 1 página-alvo, imprime na tela, salva em json, salva em csv:
 # A terceira etapa exige que o seu crawler funcione para a mesma página-alvo
@@ -80,10 +99,11 @@ out_file.close()
 
 df.to_csv("prices.csv", sep=';')
 
+# if option == "--save_csv":
+#    sys.exit(0)
+
 
 # TODO:
-
-# opções: --print, --save_csv, --save_json
 
 ## 2 páginas-alvo:
 # A quarta etapa exige que você extraia as informações também da

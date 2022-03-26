@@ -14,10 +14,11 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```    
 
-And after that, run the imprime.py script   
+And after that, run the imprime.py script with an option:   
+*- -print*, *- -save_json* or *- -save_csv*
 
 ```bash
-python imprime.py
+python imprime.py --print
 ```
 
 ## My favorite git rotine at github:   
