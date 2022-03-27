@@ -3,6 +3,7 @@
 Beautiful Crawler is a simple web crawler developed in six or less days for a job application.   
 Heavily based on [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/) Python library.
 
+
 ## Usage   
 
 I used [pip](https://pip.pypa.io/en/stable/) to create a virtual enviroment and install requirements.txt   
@@ -14,11 +15,13 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```    
 
-And after that, run the imprime.py script with an option:   
+And after that, run the imprime1.py or imprime2.py scripts with an option:   
 *- -print*, *- -save_json* or *- -save_csv*
 
 ```bash
-python imprime.py --print
+python imprime1.py --print  # or --save_json or --save_csv
+# or 
+python imprime2.py --print  # or --save_json or --save_csv
 ```
 
 ## My favorite git rotine at github:   
