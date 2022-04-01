@@ -24,28 +24,22 @@ else:
 # página-alvo 2, tendo as mesmas funcionalidades da etapa anterior.
 
 resp = requests.get("https://web.archive.org/web/20210131084315/https://www.digitalocean.com/pricing/")
-foco = "table"
+info = "table"
+soup = bs4.BeautifulSoup(resp.text, 'html5lib')
+tables = soup.select(info)
+table = soup.find_all("tbody")
+titulos = ['MEMORY', 'VCPU', 'BANDWIDTH', 'STORAGE', 'PRICE']
+table_info = []
 
+n = 0
+for rows in table[0]:
+    n +=1
+    row = re.findall(r'<td>(.\w+)</td>', str(rows), re.I)
+    price = re.findall(r'<td data-price="(.[\d]+)', str(rows), re.I)[0]
+    row.append(price)
+    table_info.append(row)
 
-def catcher2(response_text, info):
-    soup = bs4.BeautifulSoup(response_text, 'html5lib')
-    tables = soup.select(info)
-    table = soup.find_all("tbody")
-    titulos = ['MEMORY', 'VCPU', 'BANDWIDTH', 'STORAGE', 'PRICE']
-    table_info = []
-    n = 0
-    for rows in table[0]:
-        n +=1
-        row = re.findall(r'<td>(.\w+)</td>', str(rows), re.I)
-        price = re.findall(r'<td data-price="(.[\d]+)', str(rows), re.I)[0]
-        row.append(price)
-        table_info.append(row)
-
-    df = pd.DataFrame(table_info, columns=titulos)
-    return df
-
-
-df = catcher2(resp.text, foco)
+df = pd.DataFrame(table_info, columns=titulos)
 print(df)
 
 if option == "--print":
