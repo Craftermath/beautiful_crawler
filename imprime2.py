@@ -60,8 +60,6 @@ df.to_csv("prices2.csv", sep=';')
 
 # TODO:
 
-# refatorar (-> funções)
-
 # testes
 
 # type hint e/ou docstrings nas funções
